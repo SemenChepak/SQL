@@ -26,6 +26,5 @@ def select_all_person_from_db():
 
 def generate_person_insert():
     person = People()
-    session.add(person)
-    session.commit()
+
     return person

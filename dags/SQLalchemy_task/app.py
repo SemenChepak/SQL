@@ -1,9 +1,7 @@
 from configparser import ConfigParser
 from random import randint
 
-from SQLalchemy_task.workers.Card_worker import generate_card_insert
-from SQLalchemy_task.workers.People_worker import generate_person_insert
-from SQLalchemy_task.workers.Transaction_worker import generate_transaction_insert
+from SQLalchemy_task.Classes import main_classes
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -18,12 +16,36 @@ session = Session()
 
 
 def insert():
+    persons = []
+    cards = []
     for i in range(randint(1, 1000)):
-        per = generate_person_insert()
-        for j in range(randint(0, 1)):
-            card = generate_card_insert(per)
-            for k in range(randint(0, 5)):
-                generate_transaction_insert(card)
+        per = main_classes.People()
+        session.add(per)
+        session.commit()
+
+        for i in range(randint(1, 2)):
+            card = main_classes.Cards()
+            card.holder_id = per.customer_id
+            session.add(card)
+            session.commit()
+
+            for j in range(randint(0, 5)):
+                tr = main_classes.Transactions()
+                tr.card_no = card.card_no
+                session.query(main_classes.Cards).filter(main_classes.Cards.card_no == int(card.card_no)).update(
+                    {'last_used_on': tr.transaction_time})
+                session.query(main_classes.Cards).filter(main_classes.Cards.card_no == int(card.card_no)).update(
+                    {'amount': tr.value})
+
+                session.add(tr)
+                session.commit()
 
 
+def check_db():
+    q = ENGINE.execute('SHOW TABLES').fetchall()
+    if q == []:
+        raise KeyError
 
+
+def create_all():
+    main_classes.Base.metadata.create_all(ENGINE)

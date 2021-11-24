@@ -74,7 +74,7 @@ class Transactions(Base):
     transaction_id = Column(String(100), primary_key=True, unique=True, )
     card_no = Column(String(16), ForeignKey(Cards.card_no), nullable=False)
     transaction_time = Column(Date)
-    comment = Column(String(256))
+    comment = Column(String(999))
     value = Column(FLOAT)
 
     def __init__(self):

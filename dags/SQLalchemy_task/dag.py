@@ -3,10 +3,10 @@ import sys
 from datetime import datetime
 from datetime import timedelta
 
-from SQLalchemy_task.app import insert
-
+from SQLalchemy_task.app import insert, check_db, create_all
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+from airflow.utils.trigger_rule import TriggerRule
 
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
@@ -20,25 +20,43 @@ default_args = {
 }
 
 with DAG(
-        'Pandas',
+        'Alchemy',
         default_args=default_args,
         description='data extraction',
         schedule_interval=timedelta(minutes=20),
         start_date=datetime(2021, 11, 23),
         catchup=False,
 ) as dag:
-    t1 = PythonOperator(
-        task_id='insert_person',
-        python_callable=insert,
+    check_db_exist = PythonOperator(
+        task_id='check_db_exist',
+        python_callable=check_db,
+        retries=1,
+        dag=dag)
+
+    check_db_exist2 = PythonOperator(
+        task_id='check_db_exist2',
+        python_callable=check_db,
+        retries=1,
         dag=dag
     )
-
-    # # t2 = PythonOperator(
-    # #     task_id='select_all_person_from_db',
-    # #     python_callable=select_all_person_from_db,
-    # #
-    # #     dag=dag
-    # # )
+    insert_into_db = PythonOperator(
+        task_id='insert_into_db',
+        python_callable=insert,
+        trigger_rule=TriggerRule.ONE_SUCCESS,
+        dag=dag
+    )
+    insert_into_db2 = PythonOperator(
+        task_id='insert_into_db2',
+        python_callable=insert,
+        trigger_rule=TriggerRule.ONE_SUCCESS,
+        dag=dag
+    )
+    create_all_tables = PythonOperator(
+        task_id='create_all_tables',
+        python_callable=create_all,
+        trigger_rule=TriggerRule.ONE_FAILED,
+        dag=dag
+    )
     # t3 = PythonOperator(
     #     task_id='insert_cards',
     #     python_callable=insert_cards,
@@ -60,6 +78,6 @@ with DAG(
     #     dag=dag
     # )
     #
-    # t1 >> t3
-    #
-    # # t1 >> t4 >> t5
+    check_db_exist >> insert_into_db
+    check_db_exist >> create_all_tables >> check_db_exist2 >> insert_into_db2
+    check_db_exist2 >> insert_into_db2

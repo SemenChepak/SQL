@@ -1,5 +1,5 @@
 import configparser
-from random import choice, randint
+from random import choice
 
 from SQLalchemy_task.Classes.main_classes import People, Cards
 from sqlalchemy import create_engine, select
@@ -27,8 +27,5 @@ def select_all_card_from_db():
 
 def generate_card_insert(person):
     card = Cards()
-    card.holder_id = person.customer_id
-    session.add(card)
-    session.commit()
+    card.holder_id = person
     return card
-
