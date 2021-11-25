@@ -1,9 +1,13 @@
 from configparser import ConfigParser
 from random import randint
 
-from SQLalchemy_task.Classes import main_classes
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
+from SQLalchemy_task.Classes import main_classes
+from SQLalchemy_task.db_worker.db_query import select_all_person_from_db, select_all_cards_from_db
+from SQLalchemy_task.workers.Card_worker import generate_card_insert
+from SQLalchemy_task.workers.Transaction_worker import generate_transaction_insert
 
 config = ConfigParser()
 config.read("/opt/airflow/dags/SQLalchemy_task/E_B/cred/cred.ini")
@@ -15,30 +19,27 @@ Session = sessionmaker(bind=ENGINE)
 session = Session()
 
 
-def insert():
-    persons = []
-    cards = []
+def insert_person():
     for i in range(randint(1, 1000)):
         per = main_classes.People()
         session.add(per)
-        session.commit()
+    session.commit()
 
-        for i in range(randint(1, 2)):
-            card = main_classes.Cards()
-            card.holder_id = per.customer_id
-            session.add(card)
-            session.commit()
 
-            for j in range(randint(0, 5)):
-                tr = main_classes.Transactions()
-                tr.card_no = card.card_no
-                session.query(main_classes.Cards).filter(main_classes.Cards.card_no == int(card.card_no)).update(
-                    {'last_used_on': tr.transaction_time})
-                session.query(main_classes.Cards).filter(main_classes.Cards.card_no == int(card.card_no)).update(
-                    {'amount': tr.value})
+def insert_card():
+    persons_id_json = select_all_person_from_db()
+    person = [*persons_id_json.values()][0]
+    person_list = [*person.values()]
+    print(person_list)
+    generate_card_insert(person_list)
 
-                session.add(tr)
-                session.commit()
+
+def insert_tr():
+    card_id_json = select_all_cards_from_db()
+    card = [*card_id_json.values()][0]
+    card_list = [*card.values()]
+    print(f"_+_+_+_+_+_+_+_+_{card_list}")
+    generate_transaction_insert(card_list)
 
 
 def check_db():

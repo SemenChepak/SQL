@@ -1,5 +1,7 @@
 import datetime
 import uuid
+import time
+
 from random import randint
 
 import faker
@@ -45,7 +47,7 @@ class Cards(Base):
     card_no = Column(String(16), unique=True, nullable=False)
     valid_until = Column(Date)
     created_on = Column(Date)
-    last_used_on = Column(Date)
+    last_used_on = Column(String(256))
     currency = Column(String(32), nullable=False)
     amount = Column(FLOAT, nullable=False)
 
@@ -73,13 +75,13 @@ class Transactions(Base):
     __tablename__ = 'transactions'
     transaction_id = Column(String(100), primary_key=True, unique=True, )
     card_no = Column(String(16), ForeignKey(Cards.card_no), nullable=False)
-    transaction_time = Column(Date)
+    transaction_time = Column(String(256))
     comment = Column(String(999))
     value = Column(FLOAT)
 
     def __init__(self):
         self.transaction_id = str(uuid.uuid4())
-        self.transaction_time = datetime.datetime.now()
+        self.transaction_time = time.time()
         self.comment = faker.Faker().text()
         self.value = randint(-10000, 10000)
 
