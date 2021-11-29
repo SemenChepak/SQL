@@ -21,7 +21,7 @@ def generate_transaction_insert(card):
     for i in card:
         for j in range(random.randint(0, 5)):
             trans = Transactions()
-            trans.card_no = i
+            trans.card_number = i
             session.add(trans)
             session.query(Cards).filter(Cards.card_no == i).update({'last_used_on': trans.transaction_time})
             a = session.query(Cards.amount).filter(Cards.card_no == i).one()
