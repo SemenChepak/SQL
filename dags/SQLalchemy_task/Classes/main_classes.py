@@ -1,12 +1,9 @@
-import datetime
-import uuid
 import time
-
+import uuid
 from random import randint
 
 import faker
 import sqlalchemy
-from dateutil.relativedelta import relativedelta
 from mimesis import Person, Address, Datetime
 from sqlalchemy import Integer, Column, Date, FLOAT, String, ForeignKey
 from sqlalchemy import create_engine
@@ -63,8 +60,6 @@ class Cards(Base):
     def __repr__(self):
         return f"<Cards({self.card_id},{self.holder_id}, {self.card_no},{self.valid_until}, " \
                f"{self.created_on},{self.last_used_on}, {self.currency}, {self.amount})>"
-
-
 
 
 class Transactions(Base):

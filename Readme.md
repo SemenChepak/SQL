@@ -8,7 +8,7 @@
   - postgres - The database.
   - redis - The redis - broker that forwards messages from scheduler to worker. 
   
-  # Deploy Airflow on Docker Compose
+  ### Deploy Airflow on Docker Compose
   1. To get started, download the app
   ```bash
   git clone https://github.com/SemenChepak/Pandas-Airflow.git
@@ -32,5 +32,41 @@
   ```bash
   docker-compose up
   ```
-  ## Check yor app
+  ### Check yor app
   - airflow-webserver -  http://localhost:8080.
+  
+
+#Project structure
+  ```
+├───dags
+│   └───SQLalchemy_task
+│       ├───Classes
+│       │   └───__pycache__
+│       ├───db_worker
+│       │   └───__pycache__
+│       ├───E_B
+│       │   ├───cred
+│       │   └───__pycache__
+│       ├───logs
+│       ├───Spark_op
+│       │   ├───driver
+│       │   └───output
+│       │       ├───max_time
+│       │       └───parquet
+│       │           ├───person_cards
+│       │           └───transactions
+│       ├───workers
+│       │   └───__pycache__
+│       └───__pycache__
+├───logs
+│   ├───Alchemy_persons_and_cards
+│   │   ├───check_db_exist
+│   │   ├───insert_cards
+│   │   ├───insert_person
+│   │   └───recheck_db_exist2
+│   ├───Alchemy_transactions
+│   │   └───insert_tr
+│   ├───dag_processor_manager
+│   └───scheduler
+└───plugins
+```

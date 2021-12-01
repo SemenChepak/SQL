@@ -1,3 +1,4 @@
+import logging
 from configparser import ConfigParser
 from random import randint
 
@@ -8,6 +9,9 @@ from SQLalchemy_task.Classes import main_classes
 from SQLalchemy_task.db_worker.db_query import select_all_person_from_db, select_all_cards_from_db
 from SQLalchemy_task.workers.Card_worker import generate_card_insert
 from SQLalchemy_task.workers.Transaction_worker import generate_transaction_insert
+
+logging.basicConfig(filename='/opt/airflow/dags/SQLalchemy_task/logs/app_logs.log', filemode='w',
+                    format='%(name)s - %(levelname)s - %(message)s')
 
 config = ConfigParser()
 config.read("/opt/airflow/dags/SQLalchemy_task/E_B/cred/cred.ini")
@@ -30,7 +34,6 @@ def insert_card():
     persons_id_json = select_all_person_from_db()
     person = [*persons_id_json.values()][0]
     person_list = [*person.values()]
-    print(person_list)
     generate_card_insert(person_list)
 
 
@@ -38,7 +41,6 @@ def insert_tr():
     card_id_json = select_all_cards_from_db()
     card = [*card_id_json.values()][0]
     card_list = [*card.values()]
-    print(f"_+_+_+_+_+_+_+_+_{card_list}")
     generate_transaction_insert(card_list)
 
 

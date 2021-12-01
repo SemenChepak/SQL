@@ -55,7 +55,6 @@ with DAG(
         dag=dag
     )
 
-
     insert_cards = PythonOperator(
         task_id='insert_cards',
         python_callable=insert_card,
@@ -63,5 +62,6 @@ with DAG(
         dag=dag
     )
 
-    check_db_exist >> recheck_db_exist >> insert_person >>  insert_cards
-    check_db_exist >> create_all_tables
+    check_db_exist >> insert_person >> insert_cards
+    check_db_exist >> create_all_tables >> recheck_db_exist
+    recheck_db_exist >> insert_person

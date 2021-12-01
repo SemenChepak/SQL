@@ -7,7 +7,7 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.utils.trigger_rule import TriggerRule
 
-from SQLalchemy_task.app import insert_person, check_db, create_all, insert_card, insert_tr
+from SQLalchemy_task.app import check_db, create_all, insert_tr
 
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 

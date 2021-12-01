@@ -3,8 +3,10 @@ from configparser import ConfigParser
 
 from pyspark.sql import SparkSession, functions, types
 
+from path.Path import ROOT_PATH_SPARK, ROOT_PATH_WINDOWS
+
 config = ConfigParser()
-config.read("C:\\Users\\schepak\\SQLALCHEMY_Aitflow\\dags\\SQLalchemy_task\\E_B\\cred\\cred.ini")
+config.read(f"{ROOT_PATH_WINDOWS}\\SQLALCHEMY_Aitflow\\dags\\SQLalchemy_task\\E_B\\cred\\cred.ini")
 
 URL = f'jdbc:mysql://{config.get("MySQL", "user")}:{config.get("MySQL", "password")}@localhost:' \
       f'{config.get("MySQL", "port")}/{config.get("MySQL", "database")}'
@@ -66,25 +68,38 @@ def add_column(df):
     return df.withColumn("parquet_created_at", functions.lit(int(time.time())))
 
 
-def create_bank(df):
+def create_total(df, previous_date, max_date):
     df.write.option("schema", schema).parquet(
-        f'output/parquet/person_cards/created_between_{get_previous_date_from_file().split(".")[0]}'
-        f'_and_{get_max_value_from_df(df).split(".")[0]}')
+        f'file:///{ROOT_PATH_SPARK}/SQLALCHEMY_Aitflow/dags/SQLalchemy_task/Spark_op/output/parquet/person_cards/created_between_{previous_date}_and_{max_date}/total')
+    return {'previous_date': previous_date, 'max_date': max_date}
 
 
 def get_max_value_from_df(df):
     date = df.agg({"created_on": "max"}).collect()[0][0]
     with open('output/max_time/card_max_created_at.txt', 'w') as f:
         f.write(date)
-    return date
+    return date.split(".")[0]
 
 
 def get_previous_date_from_file():
     with open('output/max_time/card_max_created_at.txt', 'r') as f:
         d = f.read()
-    return d
+    return d.split(".")[0]
 
 
-dfa = create_df()
-dfa = add_column(dfa)
-create_bank(dfa)
+def create_part_bank(df, previous_date, max_date):
+    distinct_val = df.select('created_on').distinct().collect()
+    for i in distinct_val:
+        df.filter(df['created_on'] == i[0]).collect()
+        df.write.option("schema", schema).parquet(
+            f'file:///{ROOT_PATH_SPARK}/SQLALCHEMY_Aitflow/dags/SQLalchemy_task/Spark_op/output/parquet/person_cards/created_between_{previous_date}'
+            f'_and_{max_date}/bank/created_on_{i[0]}')
+
+
+if __name__ == '__main__':
+    dfa = create_df()
+    dfa = add_column(dfa)
+    previous_d = get_previous_date_from_file()
+    max_d = get_max_value_from_df(dfa)
+    date_info = create_total(dfa, previous_d, max_d)
+    create_part_bank(dfa, previous_d, max_d)
