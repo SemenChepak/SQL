@@ -1,0 +1,36 @@
+from pyspark.sql import types
+
+SCHEMA = {
+    'cards': types.StructType([types.StructField('holder_id', types.IntegerType(), True),
+                               types.StructField('holder_id_code', types.StringType(), True),
+                               types.StructField('holder_name', types.IntegerType(), True),
+                               types.StructField('holder_second_name', types.StringType(), True),
+                               types.StructField('holder_surname', types.StringType(), True),
+                               types.StructField('phone', types.StringType(), True),
+                               types.StructField('city', types.StringType(), True),
+                               types.StructField('holder_birth_date', types.DateType(), True),
+                               types.StructField('card_id', types.StringType(), True),
+                               types.StructField('card_no', types.IntegerType(), True),
+                               types.StructField('valid_until', types.StringType(), True),
+                               types.StructField('created_on', types.StringType(), True),
+                               types.StructField('last_used_on', types.StringType(), True),
+                               types.StructField('currency', types.StringType(), True),
+                               types.StructField('amount', types.StringType(), True),
+                               types.StructField('parquet_created_at', types.StringType(), True),
+                               ]),
+
+    'transactions': types.StructType([types.StructField('transaction_id', types.IntegerType(), True),
+                                      types.StructField('card_number', types.StringType(), True),
+                                      types.StructField('transaction_time', types.IntegerType(), True),
+                                      types.StructField('comment', types.StringType(), True),
+                                      types.StructField('value', types.StringType(), True),
+                                      types.StructField('card_id', types.StringType(), True),
+                                      types.StructField('holder_id', types.StringType(), True),
+                                      types.StructField('card_no', types.DateType(), True),
+                                      types.StructField('valid_until', types.StringType(), True),
+                                      types.StructField('created_on', types.IntegerType(), True),
+                                      types.StructField('last_used_on', types.StringType(), True),
+                                      types.StructField('currency', types.StringType(), True),
+                                      types.StructField('amount', types.StringType(), True),
+                                      ])
+}

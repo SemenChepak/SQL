@@ -2,3 +2,6 @@ __pycache__/
 .idea/
 *.xml
 *.ini
+*.txt
+*.jar
+logs/
