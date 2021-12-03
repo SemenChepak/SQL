@@ -38,8 +38,8 @@ def create_total(df, previous_date, max_date, file_type):
 
 def create_part_bank(df, previous_date, max_date, file_type):
     distinct_val = df.select('created_on').distinct().collect()
-    for i in distinct_val:
-        df.filter(df['created_on'] == i[0]).collect()
+    for value in distinct_val:
+        df.filter(df['created_on'] == value[0]).collect()
         df.write.option("schema", SCHEMA[file_type]). \
             parquet(
             f'{OUTPUT_HANDLER[file_type]}/'

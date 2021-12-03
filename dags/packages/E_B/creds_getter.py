@@ -24,9 +24,7 @@ def get_creds_sql():
 
 
 def create_eng():
-    return f'mysql+mysqlconnector://{config.get("MySQL", "user")}:{config.get("MySQL", "password")}' \
-           f'@{config.get("MySQL", "host")}:{config.get("MySQL", "port")}/{config.get("MySQL", "database")}'
-
+    return config.get("MySQL", "engine")
 
 def get_sql():
     return {'select_customer_id': config.get("SQL_Query", "select_customer_id"),

@@ -16,10 +16,10 @@ ENGINE = create_engine(create_eng())
 def generate_card_insert(persons, session):
     logging.info(f"generate_card_insert get {len(persons)} persons")
 
-    for i in persons:
+    for person in persons:
         for j in range(random.randint(0, 1)):
             card = Cards()
-            card.holder_id = i
+            card.holder_id = person
             session.add(card)
 
     logging.info(" generate_card_insert insert into DB")

@@ -13,25 +13,25 @@ logging.basicConfig(filename=f'{log_path()}/Transaction_worker_logs.log',
 ENGINE = create_engine(create_eng())
 
 
-def generate_transaction_insert(card, session):
+def generate_transaction_insert(cards, session):
     logging.info(f"generate_transaction_insert get {len(card)} card")
 
-    for i in card:
+    for card in cards:
         for j in range(random.randint(0, 5)):
             trans = Transactions()
-            trans.card_number = i
+            trans.card_number = card
 
             session.add(trans)
 
             session.query(Cards).\
-                filter(Cards.card_no == i).\
+                filter(Cards.card_no == card).\
                 update({'last_used_on': trans.transaction_time})
 
             a = session.query(Cards.amount).\
-                filter(Cards.card_no == i).one()
+                filter(Cards.card_no == card).one()
 
             session.query(Cards).\
-                filter(Cards.card_no == i).\
+                filter(Cards.card_no == card).\
                 update({'amount': trans.value + a.amount})
 
     logging.info(" generate_transaction_insert insert into DB")
