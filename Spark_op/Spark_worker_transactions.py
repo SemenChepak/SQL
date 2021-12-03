@@ -2,8 +2,9 @@ from pyspark.sql import SparkSession
 
 from Spark_op.CP.Config.config_file import get_config_URL, get_config_USER
 from Spark_op.CP.PathHandler.Path import DB_DRIVER
-from Spark_op.spark_oper1.spark_Def import add_column, get_previous_date_from_file, get_max_value_from_df, create_total, \
-    create_part_bank
+from Spark_op.spark_oper1.spark_Def\
+    import add_column, get_previous_date_from_file,\
+    get_max_value_from_df, create_total, create_part_bank
 
 URL = get_config_URL()
 USER = get_config_USER()
@@ -31,8 +32,10 @@ def create_df():
                 f'created_on, '
                 f'last_used_on, '
                 f'currency, '
-                f'amount from transactions t left join cards c on t.card_number = c.card_no '
-                f'where transaction_time > {get_previous_date_from_file("transactions")}') \
+                f'amount from transactions t '
+                f'left join cards c on t.card_number = c.card_no '
+                f'where transaction_time > '
+                f'{get_previous_date_from_file("transactions")}') \
         .option("user", USER["user"]) \
         .option("password", USER["password"]) \
         .option("driver", "com.mysql.jdbc.Driver") \

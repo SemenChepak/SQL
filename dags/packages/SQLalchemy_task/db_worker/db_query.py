@@ -13,13 +13,19 @@ logging.basicConfig(filename=f'{log_path()}/db_query_logs.log', filemode='w',
 
 
 def select_all_person_from_db():
-    """this method created to extract all row from persons.DB to create cards for them.
-    Created because Airflow did not allow to extract data by means of SQLAlchemy"""
-    db_connection = sql.connect(host=SQL_CR["host"], database=SQL_CR["database"],
-                                user=SQL_CR['user'], password=SQL_CR["password"])
+    """this method created to extract all row from persons.DB
+     to create cards for them.
+    Created because Airflow did not allow to
+    extract data by means of SQLAlchemy
+    """
+    db_connection = sql.connect(host=SQL_CR["host"],
+                                database=SQL_CR["database"],
+                                user=SQL_CR['user'],
+                                password=SQL_CR["password"]
+                                )
     try:
 
-        logging.warning(f'select_all_person_from_db Create connection to DB ')
+        logging.warning('select_all_person_from_db Create connection to DB')
 
         db_cursor = db_connection.cursor()
 
@@ -39,14 +45,20 @@ def select_all_person_from_db():
 
 
 def select_all_cards_from_db():
-    """this method created to extract all row from cards.DB to create transactions for them.
-    Created because Airflow did not allow to extract data by means of SQLAlchemy"""
+    """this method created to extract all row from cards.DB
+     to create transactions for them.
+    Created because Airflow did not allow
+    to extract data by means of SQLAlchemy
+    """
 
-    db_connection = sql.connect(host=SQL_CR["host"], database=SQL_CR["database"],
-                                user=SQL_CR['user'], password=SQL_CR["password"])
+    db_connection = sql.connect(host=SQL_CR["host"],
+                                database=SQL_CR["database"],
+                                user=SQL_CR['user'],
+                                password=SQL_CR["password"]
+                                )
     try:
 
-        logging.warning(f'select_all_cards_from_db Create connection to DB  ')
+        logging.warning('select_all_cards_from_db Create connection to DB')
 
         db_cursor = db_connection.cursor()
 

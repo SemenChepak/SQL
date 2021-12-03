@@ -48,5 +48,5 @@ with DAG(
         dag=dag
     )
 
-    check_db_exist >>  insert_tr
+    check_db_exist >> insert_tr
     check_db_exist >> create_all_tables

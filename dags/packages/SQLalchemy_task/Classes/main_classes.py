@@ -9,7 +9,8 @@ from sqlalchemy import Integer, Column, Date, FLOAT, String, ForeignKey
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 
-from packages.E_B.creds_getter import get_card_table_creds, get_transactions_table_creds, create_eng
+from packages.E_B.creds_getter import get_card_table_creds, \
+    get_transactions_table_creds, create_eng
 
 Base = declarative_base()
 CARD = get_card_table_creds()
@@ -37,14 +38,21 @@ class People(Base):
         self.birth_date = Datetime().date()
 
     def __repr__(self):
-        return f"<People({self.id_code},{self.customer_id}, {self.name},{self.second_name}, " \
-               f"{self.surname},{self.phone}, {self.city}, {self.birth_date})>"
+        return f"<People({self.id_code}," \
+               f"{self.customer_id}," \
+               f" {self.name}," \
+               f"{self.second_name}, " \
+               f"{self.surname}," \
+               f"{self.phone}, " \
+               f"{self.city}, " \
+               f"{self.birth_date})>"
 
 
 class Cards(Base):
     __tablename__ = 'cards'
     card_id = Column(String(100), unique=True, primary_key=True)
-    holder_id = Column(String(100), ForeignKey(People.customer_id), nullable=False)
+    holder_id = Column(String(100),
+                       ForeignKey(People.customer_id), nullable=False)
     card_no = Column(String(16), unique=True, nullable=False)
     valid_until = Column(String(256))
     created_on = Column(String(256))
@@ -54,16 +62,24 @@ class Cards(Base):
 
     def __init__(self):
         self.card_id = str(uuid.uuid4())
-        self.card_no = ''.join(["{}".format(randint(0, 9)) for num in range(0, 16)])
+        self.card_no = ''.join(["{}".format(randint(0, 9))
+                                for num in range(0, 16)])
         self.created_on = int(time.time())
-        self.valid_until = int(self.created_on) + int(CARD['card_lifetime_seconds'])
+        self.valid_until = \
+            int(self.created_on) + int(CARD['card_lifetime_seconds'])
         self.last_used_on = None
         self.currency = "Ua"
         self.amount = 0
 
     def __repr__(self):
-        return f"<Cards({self.card_id},{self.holder_id}, {self.card_no},{self.valid_until}, " \
-               f"{self.created_on},{self.last_used_on}, {self.currency}, {self.amount})>"
+        return f"<Cards({self.card_id}" \
+               f",{self.holder_id}," \
+               f" {self.card_no}," \
+               f"{self.valid_until}, " \
+               f"{self.created_on}," \
+               f"{self.last_used_on}," \
+               f" {self.currency}, " \
+               f"{self.amount})>"
 
 
 class Transactions(Base):
@@ -78,10 +94,18 @@ class Transactions(Base):
         self.transaction_id = str(uuid.uuid4())
         self.transaction_time = int(time.time())
         self.comment = faker.Faker().text()
-        self.value = randint(int(TRANSACTIONS['transaction_range_min']), int(TRANSACTIONS['transaction_range_max']))
+        self.value = \
+            randint(
+                int(TRANSACTIONS['transaction_range_min']),
+                int(TRANSACTIONS['transaction_range_max'])
+            )
 
     def __repr__(self):
-        return f"<Transactions({self.transaction_id},{self.card_no}, {self.transaction_time},{self.comment},{self.value})>"
+        return f"<Transactions({self.transaction_id}," \
+               f"{self.card_no}, " \
+               f"{self.transaction_time}," \
+               f"{self.comment}," \
+               f"{self.value})>"
 
 
 if __name__ == '__main__':

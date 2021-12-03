@@ -6,9 +6,12 @@ from sqlalchemy.orm import sessionmaker
 
 from packages.E_B.creds_getter import log_path, create_eng
 from packages.SQLalchemy_task.Classes import main_classes
-from packages.SQLalchemy_task.db_worker.db_query import select_all_person_from_db, select_all_cards_from_db
-from packages.SQLalchemy_task.workers.Card_worker import generate_card_insert
-from packages.SQLalchemy_task.workers.Transaction_worker import generate_transaction_insert
+from packages.SQLalchemy_task.db_worker.db_query \
+    import select_all_person_from_db, select_all_cards_from_db
+from packages.SQLalchemy_task.workers.Card_worker\
+    import generate_card_insert
+from packages.SQLalchemy_task.workers.Transaction_worker \
+    import generate_transaction_insert
 
 logging.basicConfig(filename=f'{log_path()}/app_logs.log', filemode='w',
                     format='%(name)s - %(levelname)s - %(message)s')
