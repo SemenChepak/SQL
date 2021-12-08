@@ -8,7 +8,7 @@
   - postgres - The database.
   - redis - The redis - broker that forwards messages from scheduler to worker. 
   
-  # Deploy Airflow on Docker Compose
+  ### Deploy Airflow on Docker Compose
   1. To get started, download the app
   ```bash
   git clone https://github.com/SemenChepak/Pandas-Airflow.git
@@ -32,5 +32,6 @@
   ```bash
   docker-compose up
   ```
-  ## Check yor app
+  ### Check yor app
   - airflow-webserver -  http://localhost:8080.
+  
